@@ -46,6 +46,14 @@ status_dict = {
 to_work = 'to_work'
 done = 'done'
 
+def format_task_count(count):
+    if count==0 or count > 4:
+        return str(count) + ' задач'
+    elif count == 1:
+        return str(count) + ' задачa'
+    else:
+        return str(count) + ' задачи'
+
 def recognize(audio):
    model = model_repository.recognition_model()
 
@@ -162,7 +170,8 @@ def get_default_keyboard():
 @bot.message_handler(commands=['start'])
 def start_message(message):
     print(message)
-    bot.send_message(message.chat.id, text="Привет, {0.first_name}! Я твой TODO бот".format(message.from_user), reply_markup=get_default_keyboard())
+    output = 'Привет, {0.first_name}! Я твой TODO-бот. Я помогу тебе сохранять списки твоих дел и задач. Чтобы начать, используй кнопки меню, и да пребудет с тобой сила переделать все дела.'
+    bot.send_message(message.chat.id, text=output.format(message.from_user), reply_markup=get_default_keyboard())
 
 
 def get_data_from_audio_messages(message):
@@ -180,7 +189,7 @@ def get_data_from_audio_messages(message):
 def get_text_messages(message):
     print(message)
     if message.text == add_task_msg:
-        bot.send_message(message.from_user.id, "Опиши задачу", reply_markup=get_default_keyboard())
+        bot.send_message(message.from_user.id, "Опиши задачу. Я понимаю текст и голосовые.", reply_markup=get_default_keyboard())
         bot.register_next_step_handler(message, add_task_from_msg)
     elif message.text == get_tasks_msg:
         tasks = get_tasks(message.from_user.id)
@@ -199,7 +208,7 @@ def get_text_messages(message):
         for stat in stats:
             count += stat[1]
             status = status_dict[stat[0]]
-            data += 'В статусе [' + status + '] у тебя ' + str(stat[1]) + ' задач\n'
+            data += 'В статусе [' + status + '] у тебя ' + format_task_count(stat[1]) + '\n'
         data = 'Всего задач ' + str(count) + '.\n' + data
         bot.send_message(message.from_user.id, data, reply_markup=get_default_keyboard())
     elif re.fullmatch('/\d+', message.text):
