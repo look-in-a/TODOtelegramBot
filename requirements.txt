@@ -1,0 +1,12 @@
+certifi==2024.8.30
+charset-normalizer==3.3.2
+ffmpeg==1.4
+ffprobe==0.5
+grpcio==1.66.1
+idna==3.10
+protobuf==5.28.1
+pydub==0.25.1
+pyTelegramBotAPI==4.22.1
+requests==2.32.3
+urllib3==2.2.3
+yandex-speechkit==1.5.0
